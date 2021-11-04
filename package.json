@@ -1,0 +1,21 @@
+{
+	"name": "petfinder",
+	"version": "1.0.0",
+	"description": "Exotic pet finder ",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "nodemon index.js"
+	},
+	"author": "Alan B.",
+	"license": "ISC",
+	"dependencies": {
+		"cookie-parser": "^1.4.5",
+		"express": "^4.17.1",
+		"morgan": "^1.10.0",
+		"sqlite3": "^5.0.2"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.14"
+	}
+}
