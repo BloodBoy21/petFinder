@@ -10,10 +10,16 @@
 	"author": "Alan B.",
 	"license": "ISC",
 	"dependencies": {
+		"@mapbox/node-pre-gyp": "^1.0.6",
 		"cookie-parser": "^1.4.5",
+		"ejs": "^3.1.6",
 		"express": "^4.17.1",
+		"express-es6-template-engine": "^2.2.3",
 		"morgan": "^1.10.0",
-		"sqlite3": "^5.0.2"
+		"node-fetch": "^3.0.0",
+		"socket.io": "^4.3.1",
+		"sqlite3": "^5.0.2",
+		"ws": "^8.2.3"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.14"
