@@ -18,7 +18,7 @@
 				ws.close();
 			}
 			(async function () {
-				const chatRoute = "ws://localhost:3000/ws";
+				const chatRoute = "ws://localhost:3000/admin";
 				ws = new WebSocket(chatRoute);
 				ws.onopen = (e) => {
 					console.log("open");
