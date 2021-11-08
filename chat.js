@@ -70,7 +70,6 @@ class ClientCenter extends Observable {
 			this.adminCenter.disconnect(observable.client);
 		}
 		this.clients = this.clients.filter((client) => client !== observable);
-		this.availables = this.availables.filter((client) => client !== observable);
 	}
 }
 class AdminCenter extends Observable {
@@ -112,9 +111,10 @@ class AdminCenter extends Observable {
 	detach(admin) {
 		console.log("Admin disconnected");
 		if (admin.client instanceof Observer) {
-			this.waitlist.push(admin.client);
+			this.stablishConnection(admin.client);
 		}
 		this.clients = this.clients.filter((client) => client !== admin);
+		this.availables = this.availables.filter((client) => client !== admin);
 	}
 }
 
@@ -127,8 +127,7 @@ class Admin extends Observer {
 		this.ws.on("message", (message) => {
 			console.log("Admin:", message.toString());
 			if (message.action === "close") {
-				// this.client.closeConnection();
-				// this.observable.disconnect(this);
+				this.client.detach();
 			} else {
 				this.sendToClient(message);
 			}
