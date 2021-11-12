@@ -1,92 +1,91 @@
-const sqlite3 = require("sqlite3").verbose();
+const Pool = require("pg").Pool;
+const format = require("pg-format");
+const { errorHandler } = require("../helpers/index");
+const {
+	POSTGRES_DB,
+	POSTGRES_HOST,
+	POSTGRES_USER,
+	POSTGRES_PASSWORD,
+	POSTGRES_PORT,
+} = require("../config/index");
 
-class Database {
-	constructor(dbName) {
-		this.dbPath = dbName;
-		this.db = new sqlite3.Database(dbName);
-	}
-	createTable(tableName, tableFields) {
-		return new Promise((resolve, reject) => {
-			this.db.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${tableFields})`, (err) => {
-				if (err) reject(err);
-				resolve();
-			});
+class DB {
+	constructor(database) {
+		this.pool = new Pool({
+			user: POSTGRES_USER,
+			host: POSTGRES_HOST,
+			database: database,
+			password: POSTGRES_PASSWORD,
+			port: POSTGRES_PORT,
 		});
 	}
-	selectAll(tableName) {
-		return new Promise((resolve, reject) => {
-			this.db.all(`SELECT * FROM ${tableName}`, (err, rows) => {
-				if (err) reject(err);
-				resolve(rows);
-			});
-		});
+	#get_data(data) {
+		const keys = Object.keys(data);
+		const values = Object.values(data);
+		return { keys, values };
 	}
-	select(tableName, tableFields, tableValues) {
-		return new Promise((resolve, reject) => {
-			this.db.all(
-				`SELECT * FROM ${tableName} WHERE ${tableFields} = ${tableValues}`,
-				(err, rows) => {
-					if (err) reject(err);
-					resolve(rows);
-				}
-			);
-		});
+	async query(text, params = []) {
+		const connection = await this.pool.connect();
+		errorHandler.isString(text);
+		errorHandler.isArray(params);
+		const res = await connection.query(text, params);
+		connection.release();
+		return res.rows;
 	}
-	selectOne(tableName, tableFields, tableValues) {
-		return new Promise((resolve, reject) => {
-			this.select(tableName, tableFields, tableValues)
-				.then((rows) => {
-					if (rows.length > 0) {
-						resolve(rows[0]);
-					} else {
-						reject("No rows found");
-					}
-				})
-				.catch((err) => {
-					reject(err);
-				});
-		});
+	get(table, id) {
+		errorHandler.isString(id);
+		const query = `SELECT * FROM ${table} WHERE ${id}`;
+		return this.query(query);
 	}
-	deleteRow(tableName, tableFields, tableValues) {
-		return new Promise((resolve, reject) => {
-			this.db.run(`DELETE FROM ${tableName} WHERE ${tableFields} = ${tableValues}`, (err) => {
-				if (err) reject(err);
-				resolve();
-			});
-		});
+	getByID(table, id) {
+		errorHandler.isNumber(id);
+		const query = `SELECT * FROM ${table} WHERE id = ${id}`;
+		return this.query(query);
 	}
-	updateRow(tableName, tableFields, select) {
-		return new Promise((resolve, reject) => {
-			this.db.run(`UPDATE ${tableName} SET ${tableFields} WHERE ${select}`, (err) => {
-				if (err) reject(err);
-				resolve();
-			});
-		});
+	getAll(table) {
+		const query = `SELECT * FROM ${table}`;
+		return this.query(query);
 	}
-	insertMany(tableName, tableFields, tableValues) {
-		return new Promise((resolve, reject) => {
-			let values = tableValues.map(() => "?").join(",");
-			this.db.run(
-				`INSERT INTO ${tableName} (${tableFields}) VALUES (${values})`,
-				tableValues,
-				function (err) {
-					if (err) reject(err);
-					resolve(this.lastID);
-				}
-			);
-		});
+	insert(table, data_) {
+		errorHandler.isObject(data_);
+		const data = this.#get_data(data_);
+		const query = format(`INSERT INTO ${table} (${data.keys.join(",")}) VALUES (%L)`, data.values);
+		return this.query(query);
+	}
+	update(table, data, id) {
+		errorHandler.isObject(data);
+		errorHandler.isString(id);
+		const setQuery = Object.keys(data)
+			.map((key) => `${key} = '${data[key]}'`)
+			.join(", ");
+		const query = `UPDATE ${table} SET ${setQuery} WHERE '${id}' RETURNING *`;
+		return this.query(query);
+	}
+	updateByID(table, data, id) {
+		errorHandler.isObject(data);
+		errorHandler.isNumber(id);
+		const setQuery = Object.keys(data)
+			.map((key) => {
+				let value = typeof data[key] === "string" ? `'${data[key]}'` : data[key];
+				return `${key} = ${value}`;
+			})
+			.join(", ");
+		const query = `UPDATE ${table} SET ${setQuery} WHERE id = ${id} RETURNING *`;
+		return this.query(query);
+	}
+	delete(table, id) {
+		errorHandler.isNumber(id);
+		const query = `DELETE FROM ${table} WHERE ${id} RETURNING *`;
+		return this.query(query);
+	}
+	deleteByID(table, id) {
+		errorHandler.isNumber(id);
+		const query = `DELETE FROM ${table} WHERE id = ${id} RETURNING *`;
+		return this.query(query);
 	}
 	close() {
-		this.db.close();
-	}
-	customSelect(query) {
-		return new Promise((resolve, reject) => {
-			this.db.all(query, function (err, rows) {
-				if (err) reject(err);
-				resolve(rows);
-			});
-		});
+		this.pool.end();
 	}
 }
 
-module.exports = Database;
+module.exports = DB;

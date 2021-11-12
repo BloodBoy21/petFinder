@@ -81,7 +81,6 @@ class AdminCenter extends Observable {
 		this.availables = [];
 	}
 	run(ws) {
-		ws.send("Welcome to chat Admin center");
 		const admin = new Admin(ws, this);
 		this.clients.push(admin);
 		this.availables.push(admin);

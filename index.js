@@ -15,7 +15,6 @@ const chatAdmin = new webSocket({ noServer: true });
 const { AdminCenter, ClientCenter } = require("./chat");
 const adminCenter = new AdminCenter(chatAdmin);
 const clientCenter = new ClientCenter(chatSocket, adminCenter);
-// adminCenter.run();
 chatSocket.on("connection", (ws) => {
 	clientCenter.run(ws);
 });
@@ -28,11 +27,11 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use("/static", express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "public")));
 //Routes
 app.use("/", rootRouter);
 app.use("/api", apiRouter);
-app.use("/ws", chatRouter);
+app.use("/help", chatRouter);
 //Set view engine
 app.set("views", path.join(__dirname, "views"));
 app.engine("html", require("express-es6-template-engine"));
@@ -46,7 +45,7 @@ server.on("upgrade", (req, socket, head) => {
 	console.log("upgrade");
 	console.log("handle upgrade");
 	const selectWSS = {
-		"/ws": chatSocket,
+		"/help": chatSocket,
 		"/admin": chatAdmin,
 	}[req.url];
 	if (selectWSS) {
