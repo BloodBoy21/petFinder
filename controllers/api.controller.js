@@ -1,10 +1,11 @@
 const { apiModel } = require("../models/index.js");
+const { POSTGRES_DB } = require("../config/index");
 const { regexFilter } = require("../helpers/index");
-const db = new apiModel("pet_inventary.db");
+const db = new apiModel(POSTGRES_DB);
 
 exports.getAll = async (req, res) => {
 	try {
-		let data = await db.selectAll("PETS");
+		let data = await db.getAll("pets");
 		res.json(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -15,8 +16,8 @@ exports.getByType = async (req, res) => {
 		if (!req.params.type) {
 			throw new Error("Please select a pet type.");
 		}
-		const type = regexFilter.onlyChars(req.params.type);
-		let data = await db.select("PETS", "lower(type)", `"${type.toLowerCase()}"`);
+		const type = regexFilter.onlyChars(req.params.type).toLowerCase();
+		let data = await db.get("pets", `lower(type) = '${type}'`);
 		res.json(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -27,7 +28,7 @@ exports.getAvailables = async (req, res) => {
 		const petType = req.query.type
 			? `AND lower(TO_ADOPT.type)="${regexFilter.onlyChars(req.query.type).toLowerCase()}"`
 			: "";
-		let data = await db.customSelect(
+		let data = await db.query(
 			`SELECT * FROM  PETS,TO_ADOPT WHERE PETS.id = TO_ADOPT.id ${petType}`
 		);
 		res.json(data);
@@ -37,25 +38,7 @@ exports.getAvailables = async (req, res) => {
 };
 exports.addPet = async (req, res) => {
 	try {
-		const petModel = { name: null, age: null, gender: null, type: null, adopted: 0, img: null };
-		const queryNames = Object.keys(petModel).join(",");
-		const validForm = checkJSON(
-			req.body,
-			Object.keys(petModel).filter((key) => key !== "adopted")
-		);
-		if (!validForm) throw new Error("Please fill all the fields.");
-		let petData = filterData(req.body, petModel);
-		petData.forEach((data, index) => {
-			//Age and adopted must be a number
-			const regexMethod = index === 1 || index === 4 ? "onlyNumbers" : "onlyChars";
-			petData[index] = regexFilter[regexMethod](data);
-		});
-		const lastID = await db.insertMany("PETS", queryNames, petData);
-		await db.insertMany("TO_ADOPT", "id,name,type", [
-			lastID,
-			regexFilter.onlyChars(petModel.name),
-			regexFilter.onlyChars(petModel.type),
-		]);
+		await db.insert("pets", req.pet);
 		res.sendStatus(200);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

@@ -8,9 +8,11 @@ const {
 	POSTGRES_PASSWORD,
 	POSTGRES_PORT,
 } = require("../config/index");
-
-class DB {
-	constructor(database) {
+const dbError = errorHandler.DBerror;
+const modelError = errorHandler.Modelerror;
+class Database {
+	constructor(database = POSTGRES_DB) {
+		if (Database.instance instanceof Database) return Database.instance;
 		this.pool = new Pool({
 			user: POSTGRES_USER,
 			host: POSTGRES_HOST,
@@ -18,6 +20,8 @@ class DB {
 			password: POSTGRES_PASSWORD,
 			port: POSTGRES_PORT,
 		});
+		Object.freeze(this);
+		Database.instance = this;
 	}
 	#get_data(data) {
 		const keys = Object.keys(data);
@@ -26,19 +30,19 @@ class DB {
 	}
 	async query(text, params = []) {
 		const connection = await this.pool.connect();
-		errorHandler.isString(text);
-		errorHandler.isArray(params);
+		dbError.isString(text);
+		dbError.isArray(params);
 		const res = await connection.query(text, params);
 		connection.release();
 		return res.rows;
 	}
 	get(table, id) {
-		errorHandler.isString(id);
+		dbError.isString(id);
 		const query = `SELECT * FROM ${table} WHERE ${id}`;
 		return this.query(query);
 	}
 	getByID(table, id) {
-		errorHandler.isNumber(id);
+		dbError.isNumber(id);
 		const query = `SELECT * FROM ${table} WHERE id = ${id}`;
 		return this.query(query);
 	}
@@ -47,14 +51,17 @@ class DB {
 		return this.query(query);
 	}
 	insert(table, data_) {
-		errorHandler.isObject(data_);
+		dbError.isObject(data_);
 		const data = this.#get_data(data_);
-		const query = format(`INSERT INTO ${table} (${data.keys.join(",")}) VALUES (%L)`, data.values);
+		const query = format(
+			`INSERT INTO ${table} (${data.keys.join(",")}) VALUES (%L) RETURNING *`,
+			data.values
+		);
 		return this.query(query);
 	}
 	update(table, data, id) {
-		errorHandler.isObject(data);
-		errorHandler.isString(id);
+		dbError.isObject(data);
+		dbError.isString(id);
 		const setQuery = Object.keys(data)
 			.map((key) => `${key} = '${data[key]}'`)
 			.join(", ");
@@ -62,8 +69,8 @@ class DB {
 		return this.query(query);
 	}
 	updateByID(table, data, id) {
-		errorHandler.isObject(data);
-		errorHandler.isNumber(id);
+		dbError.isObject(data);
+		dbError.isNumber(id);
 		const setQuery = Object.keys(data)
 			.map((key) => {
 				let value = typeof data[key] === "string" ? `'${data[key]}'` : data[key];
@@ -74,12 +81,12 @@ class DB {
 		return this.query(query);
 	}
 	delete(table, id) {
-		errorHandler.isNumber(id);
+		dbError.isNumber(id);
 		const query = `DELETE FROM ${table} WHERE ${id} RETURNING *`;
 		return this.query(query);
 	}
 	deleteByID(table, id) {
-		errorHandler.isNumber(id);
+		dbError.isNumber(id);
 		const query = `DELETE FROM ${table} WHERE id = ${id} RETURNING *`;
 		return this.query(query);
 	}
@@ -87,5 +94,4 @@ class DB {
 		this.pool.end();
 	}
 }
-
-module.exports = DB;
+module.exports = Database;

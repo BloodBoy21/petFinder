@@ -28,4 +28,12 @@ class DBerror extends Error {
 		throw new DBerror(`${param} is not an array`);
 	}
 }
-module.exports = DBerror;
+
+class Modelerror extends Error {
+	constructor(message) {
+		super(message);
+		this.name = "Modelerror";
+	}
+}
+
+module.exports = { DBerror, Modelerror };
