@@ -1,11 +1,10 @@
 const Model = require("./model");
 class Pet extends Model {
-	#table = "pets";
 	constructor(data = {}) {
-		super(data);
+		super(data, "pets");
 	}
-	get table() {
-		return this.#table;
+	getBySpecies(species) {
+		return this.DB.get(this.table, `lower(species)='${species}'`);
 	}
 }
 

@@ -6,8 +6,8 @@ const cookieParser = require("cookie-parser");
 const apiRouter = require("./routes/API.routes");
 const rootRouter = require("./routes/root.routes");
 const server = require("http").Server(app);
+const db = require("./db");
 const { PORT, NODE_ENV } = require("./config/index");
-
 //Serve middleware
 app.use(morgan("dev"));
 app.use(express.json());

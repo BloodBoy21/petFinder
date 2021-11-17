@@ -57,14 +57,14 @@ function addPet(pet) {
 }
 //TODO adopt format method
 function adoptPet(owner) {
-	const allowedProperties = propertiesInJSON.slice(-2, -1);
+	const allowedProperties = propertiesInJSON.slice(6, 8);
 	const requiredProperties = allowedProperties;
-	if (!jsonHasOwnProperty(pet, requiredProperties)) throw new Error("Invalid format");
+	if (!jsonHasOwnProperty(owner, requiredProperties)) throw new Error("Invalid format");
 	owner = filterJSON(owner, allowedProperties);
 	if (!jsonCorrectPropertyType(owner)) {
 		throw new Error("Invalid  data type sent");
 	}
-	return pet; //returns the owner object with the correct format
+	return owner; //returns the owner object with the correct format
 }
 module.exports = {
 	addPet,

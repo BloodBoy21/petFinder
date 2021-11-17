@@ -1,13 +1,13 @@
 const Pool = require("pg").Pool;
 const format = require("pg-format");
-const { errorHandler } = require("../helpers/index");
+const { errorHandler } = require("./helpers/index");
 const {
 	POSTGRES_DB,
 	POSTGRES_HOST,
 	POSTGRES_USER,
 	POSTGRES_PASSWORD,
 	POSTGRES_PORT,
-} = require("../config/index");
+} = require("./config/index");
 const dbError = errorHandler.DBerror;
 const modelError = errorHandler.Modelerror;
 class Database {
@@ -94,4 +94,4 @@ class Database {
 		this.pool.end();
 	}
 }
-module.exports = Database;
+module.exports = new Database(POSTGRES_DB);
