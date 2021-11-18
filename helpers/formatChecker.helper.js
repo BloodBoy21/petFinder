@@ -46,8 +46,8 @@ function jsonCorrectPropertyType(json) {
 	return result;
 }
 function addPet(pet) {
-	const allowedProperties = propertiesInJSON.slice(0, -3);
-	const requiredProperties = allowedProperties.slice(1, -1);
+	const allowedProperties = propertiesInJSON.slice(0, 6);
+	const requiredProperties = allowedProperties.slice(1, 6);
 	if (!jsonHasOwnProperty(pet, requiredProperties)) throw new Error("Invalid format");
 	pet = filterJSON(pet, allowedProperties);
 	if (!jsonCorrectPropertyType(pet)) {

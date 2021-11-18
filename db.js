@@ -47,7 +47,7 @@ class Database {
 		return this.query(query);
 	}
 	getAll(table) {
-		const query = `SELECT * FROM ${table}`;
+		const query = `SELECT * FROM ${table} ORDER BY id ASC`;
 		return this.query(query);
 	}
 	insert(table, data_) {

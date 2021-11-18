@@ -19,7 +19,6 @@ class AdoptPet extends Model {
 				return `${this.table}.${key} = ${value}`;
 			})
 			.join(" AND ");
-		console.log(queryParams);
 		return this.DB.query(
 			`SELECT * FROM ${this.table} JOIN ${model_.table} ON `.concat(queryParams)
 		);

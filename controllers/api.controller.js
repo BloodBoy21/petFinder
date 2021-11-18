@@ -1,7 +1,16 @@
 const { Pet, AdoptPet, AdoptedPet } = require("../models/index.js");
-const { POSTGRES_DB } = require("../config/index");
 const { regexFilter } = require("../helpers/index");
-
+exports.getPet = async (req, res) => {
+	if (!req.params.id) throw new Error("Please select a pet.");
+	const id = parseInt(regexFilter.onlyNumbers(req.params.id));
+	try {
+		const data = await new AdoptPet().joinToModel(Pet, { id: undefined });
+		const pet = data.filter((pet) => pet.id === id)[0];
+		res.json(pet);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
 exports.getAll = async (req, res) => {
 	try {
 		let data = await Pet.all();
@@ -12,21 +21,21 @@ exports.getAll = async (req, res) => {
 };
 exports.getBySpecies = async (req, res) => {
 	try {
-		if (!req.params.type) throw new Error("Please select a pet type.");
-		const type = regexFilter.onlyChars(req.params.type).toLowerCase();
-		let data = await new Pet().getBySpecies(type);
+		if (!req.params.species) throw new Error("Please select a pet type.");
+		const species = regexFilter.onlyChars(req.params.species).toLowerCase();
+		let data = await new Pet().getBySpecies(species);
 		res.json(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
 };
-//TODO create a model for the availables pets
+//Todo fix case where species is selected
 exports.getAvailables = async (req, res) => {
 	try {
 		let data;
-		if (req.query.type) {
-			const type = regexFilter.onlyChars(req.query.type);
-			data = await new AdoptPet().joinToModel(Pet, { id: undefined, species: `'${type}'` });
+		if (req.query.species) {
+			const type = regexFilter.onlyChars(req.query.species);
+			data = await new AdoptPet().joinToModel(Pet, { id: undefined, species: `'${type}'` }); //!Return only if species is selected with first letter capitalized
 		} else {
 			data = await new AdoptPet().joinToModel(Pet, { id: undefined });
 		}
@@ -45,7 +54,6 @@ exports.addPet = async (req, res) => {
 		res.status(500).json({ message: err.message });
 	}
 };
-//TODO create a model for adopted pets
 exports.adoptPet = async (req, res) => {
 	try {
 		if (!req.params.id) throw new Error("Please select a pet.");

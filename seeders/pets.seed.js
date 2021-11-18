@@ -1,8 +1,6 @@
 "use strict";
-import sqlite3 from "sqlite3";
-import fs from "fs";
-sqlite3.verbose();
-const db = new sqlite3.Database("./pet_inventary.db");
+const db = require("../db");
+const { Pet, AdoptPet } = require("../models/index");
 const maleNames = `
 MAX	KOBE	OSCAR
 COOPER	OAKLEY	MAC
@@ -86,36 +84,17 @@ ELLA	PRINCESS	MABEL
 SASHA	LILLY	PEACHES
 IZZY	RILEY	KALI
 SHADOW`.split(/\s+/);
-let pets = fs.readFileSync("pets.json");
-pets = JSON.parse(pets);
-let counter = 0;
-db.parallelize(() => {
-	pets.forEach((pet) => {
-		const dictName = {
-			Female: femaleNames,
-			Male: maleNames,
-		};
-		let randomName = Math.floor(Math.random() * 99);
-		pet.Name = dictName[pet.Gender][randomName];
-		counter++;
-		let petToAdopt = {
-			id: counter,
-			name: pet.Name,
-			type: pet.Type,
-		};
-		console.log(pet);
-		let petData = Object.values(pet);
-		let petDataToAdopt = Object.values(petToAdopt);
-		let query = "INSERT INTO PETS(name,age,gender,type,adopted,img) VALUES (?,?,?,?,?,?)";
-		let query2 = "INSERT INTO TO_ADOPT(id,name,type) VALUES (?,?,?)";
-		const erroCatch = (e) => {
-			if (e) {
-				console.log(e);
-			}
-		};
-		// db.run(query, petData, erroCatch);
-		// db.run(query2, petDataToAdopt, erroCatch);
-	});
-});
-
-db.close();
+(async () => {
+	for (let i = 0; i < 200; i++) {
+		const gender = Math.floor(Math.random() * 2) === 0 ? "Female" : "Male";
+		let name = { Female: femaleNames, Male: maleNames }[gender];
+		name = name[Math.floor(Math.random() * 100)];
+		const age = Math.floor(Math.random() * 10) + 1;
+		const species = ["Dog", "Cat", "Rabbit"][Math.floor(Math.random() * 3)];
+		const newPet = { name, gender, age, species, location: "Minatitlán,ver" };
+		const newPetToAdopt = { id: i + 1, name, species };
+		await new Pet(newPet).save();
+		await new AdoptPet(newPetToAdopt).save();
+	}
+	db.close();
+})();

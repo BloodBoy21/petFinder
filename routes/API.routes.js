@@ -7,7 +7,10 @@ router
 	.get(apiController.getBySpecies)
 	.post(APImiddleware.jsonChecker, apiController.addPet);
 router.get("/pet/adopt", apiController.getAvailables);
-router.post("/pet/adopt/:id", APImiddleware.jsonChecker, apiController.adoptPet);
-router.get("/pet/:type", apiController.getBySpecies);
+router
+	.route("/pet/adopt/:id")
+	.get(apiController.getPet)
+	.post(APImiddleware.jsonChecker, apiController.adoptPet);
+router.get("/pet/:species", apiController.getBySpecies);
 
 module.exports = router;
