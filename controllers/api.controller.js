@@ -1,11 +1,12 @@
-const { Pet, AdoptPet, AdoptedPet } = require("../models/index.js");
+const { Pet, AvailablePet, Owner } = require("../models/index.js");
 const { regexFilter } = require("../helpers/index");
+const availablePet = require("../models/availablePet.model.js");
 exports.getPet = async (req, res) => {
 	if (!req.params.id) throw new Error("Please select a pet.");
 	const id = parseInt(regexFilter.onlyNumbers(req.params.id));
 	try {
-		const data = await new AdoptPet().joinToModel(Pet, { id: undefined });
-		const pet = data.filter((pet) => pet.id === id)[0];
+		let pet = await AvailablePet.checkIfExists(id);
+		pet = await Pet.findByPk(pet.id);
 		res.json(pet);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -13,7 +14,7 @@ exports.getPet = async (req, res) => {
 };
 exports.getAll = async (req, res) => {
 	try {
-		let data = await Pet.all();
+		let data = await Pet.findAll();
 		res.json(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -23,7 +24,7 @@ exports.getBySpecies = async (req, res) => {
 	try {
 		if (!req.params.species) throw new Error("Please select a pet type.");
 		const species = regexFilter.onlyChars(req.params.species).toLowerCase();
-		let data = await new Pet().getBySpecies(species);
+		let data = await Pet.getBySpecies(species);
 		res.json(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -34,10 +35,15 @@ exports.getAvailables = async (req, res) => {
 	try {
 		let data;
 		if (req.query.species) {
-			const type = regexFilter.onlyChars(req.query.species);
-			data = await new AdoptPet().joinToModel(Pet, { id: undefined, species: `'${type}'` }); //!Return only if species is selected with first letter capitalized
+			const species = regexFilter.onlyChars(req.query.species);
+			data = await Pet.findAll({
+				where: {
+					species,
+					adopted: false,
+				},
+			}); //!Return only if species is selected with first letter capitalized
 		} else {
-			data = await new AdoptPet().joinToModel(Pet, { id: undefined });
+			data = await Pet.findAll({ where: { adopted: false } });
 		}
 		res.json(data);
 	} catch (err) {
@@ -46,9 +52,9 @@ exports.getAvailables = async (req, res) => {
 };
 exports.addPet = async (req, res) => {
 	try {
-		const pet = (await new Pet(req.pet).save())[0];
-		const adoptInfo = { id: pet.id, name: pet.name, species: pet.species };
-		await new AdoptPet(adoptInfo).save();
+		const pet = await new Pet(req.pet).save();
+		const adoptInfo = { id: pet.id, name: pet.name, species: pet.species, location: pet.location };
+		await new AvailablePet(adoptInfo).save();
 		res.sendStatus(200);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -58,15 +64,20 @@ exports.adoptPet = async (req, res) => {
 	try {
 		if (!req.params.id) throw new Error("Please select a pet.");
 		const id = parseInt(regexFilter.onlyNumbers(req.params.id));
-		if (!(await AdoptPet.checkIfExists(id))) throw new Error("This pet is already adopted.");
-		const petData = await AdoptPet.find(id);
-		const owner = regexFilter.onlyChars(req.pet.owner);
-		const owner_email = regexFilter.onlyEmail(req.pet.email);
-		const ownerData = { owner, owner_email, date: new Date().getDate() };
-		Object.assign(petData, ownerData);
-		await new Pet().update({ is_adopted: "true" }, id);
-		await new AdoptPet().wasAdopted(id);
-		await new AdoptedPet(petData).save();
+		let pet = await availablePet.checkIfExists(id);
+		pet = await Pet.findByPk(pet.id);
+		const ownerName = regexFilter.onlyChars(req.pet.owner);
+		const email = regexFilter.onlyEmail(req.pet.email);
+		const ownerData = {
+			ownerName,
+			email,
+			id: pet.id,
+			petName: pet.name,
+			species: pet.species,
+		};
+		await Pet.wasAdopted(pet.id);
+		await AvailablePet.adopted(pet.id);
+		await new Owner(ownerData).save();
 		res.status(200).json({ message: "Pet adopted successfully." });
 	} catch (err) {
 		res.status(404).json({ message: err.message });

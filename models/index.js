@@ -1,5 +1,5 @@
 module.exports = {
 	Pet: require("./pet.model"),
-	AdoptPet: require("./adopt.model"),
-	AdoptedPet: require("./adopted.model"),
+	Owner: require("./owner.model"),
+	AvailablePet: require("./availablePet.model"),
 };
