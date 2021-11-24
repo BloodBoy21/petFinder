@@ -22,7 +22,7 @@ exports.getAll = async (req, res) => {
 };
 exports.getBySpecies = async (req, res) => {
 	try {
-		if (!req.params.species) throw new Error("Please select a pet type.");
+		if (!req.params.species) throw new Error("Please select a species.");
 		const species = regexFilter.onlyChars(req.params.species).toLowerCase();
 		let data = await Pet.getBySpecies(species);
 		res.json(data);
@@ -55,7 +55,7 @@ exports.addPet = async (req, res) => {
 		const pet = await new Pet(req.pet).save();
 		const adoptInfo = { id: pet.id, name: pet.name, species: pet.species, location: pet.location };
 		await new AvailablePet(adoptInfo).save();
-		res.sendStatus(200);
+		res.status(200).json({ message: "Pet added successfully.", data: pet });
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}

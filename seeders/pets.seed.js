@@ -1,6 +1,6 @@
 "use strict";
 const db = require("../db");
-const { Pet, AdoptPet } = require("../models/index");
+const { Pet, AvailablePet } = require("../models/index");
 const maleNames = `
 MAX	KOBE	OSCAR
 COOPER	OAKLEY	MAC
@@ -90,11 +90,12 @@ SHADOW`.split(/\s+/);
 		let name = { Female: femaleNames, Male: maleNames }[gender];
 		name = name[Math.floor(Math.random() * 100)];
 		const age = Math.floor(Math.random() * 10) + 1;
+		const location = "Minatitlán,ver";
 		const species = ["Dog", "Cat", "Rabbit"][Math.floor(Math.random() * 3)];
-		const newPet = { name, gender, age, species, location: "Minatitlán,ver" };
-		const newPetToAdopt = { id: i + 1, name, species };
+		const newPet = { name, gender, age, species, location };
+		const newPetToAdopt = { id: i + 1, name, species, location };
 		await new Pet(newPet).save();
-		await new AdoptPet(newPetToAdopt).save();
+		await new AvailablePet(newPetToAdopt).save();
 	}
 	db.close();
 })();
