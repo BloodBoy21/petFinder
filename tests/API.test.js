@@ -1,13 +1,16 @@
 const http = require("http");
 const request = require("request");
+const baseUrl = "http://localhost:3000/api"; 
 describe("API", () => {
 	describe("GET /api/pet/all", () => {
+		jest.setTimeout(10000);
 		it("should return a list of pets", (done) => {
 			http
-				.get("http://localhost:3000/api/pet/all", (res) => {
+				.get(`${baseUrl}/pet/all`, (res) => {
 					res.on("data", (data) => {
-						const pets = JSON.parse(data);
-						expect(pets).toBeInstanceOf(Array);
+						data = data.toString();
+						const pet = JSON.parse(data);
+						expect(pet.length).toBeGreaterThan(0);
 						done();
 					});
 				})
@@ -19,15 +22,17 @@ describe("API", () => {
 	describe("GET /api/pet/:id", () => {
 		it("should return a pet", (done) => {
 			http
-				.get("http://localhost:3000/api/pet/1", (res) => {
+				.get(`${baseUrl}/pet/adopt/5`, (res) => {
 					res.on("data", (data) => {
+						data = data.toString();
 						const pet = JSON.parse(data);
-						expect(pet).toBeInstanceOf(Object);
+						expect(pet.id).toBe(5);
 						done();
-					});
-				})
-				.on("error", (err) => {
-					console.log("Error: " + err.message);
+					})	
+						.on("error", (err) => {
+							console.log("Error: " + err.message);
+							done(err);
+						});
 				});
 		});
 	});
@@ -41,7 +46,7 @@ describe("API", () => {
 				location: "New York",
 			};
 			const options = {
-				url: "http://localhost:3000/api/pet",
+				url: `${baseUrl}/pet`,
 				json: true,
 				body: { data: pet },
 			};
@@ -58,7 +63,7 @@ describe("API", () => {
 	describe("Get /api/pet/adopt?species=", () => {
 		it("should return a list of available pets by species", (done) => {
 			http
-				.get("http://localhost:3000/api/pet/adopt?species=Cat", (res) => {
+				.get(`${baseUrl}/pet/adopt?species=Cat`, (res) => {
 					res.on("data", (data) => {
 						const pets = JSON.parse(data);
 						expect(pets).toBeInstanceOf(Array);
@@ -79,21 +84,21 @@ describe("API", () => {
 				location: "New York",
 				gender: "Female",
 			};
-			Owner = {
+			const Owner = {
 				owner: "Alan",
 				email: "death1027@outlook.com",
 			};
 			const options = {
-				url: "http://localhost:3000/api/pet",
+				url: `${baseUrl}/pet`,
 				json: true,
 				body: { data: pet },
 			};
 			request.post(options, (err, res, body) => {
 				if (err) return console.log(err);
-				const petData = res.body.data;
-				options.url = `http://localhost:3000/api/pet/adopt/${petData.id}`;
+				const petData = body.data;
+				options.url = `${baseUrl}/pet/adopt/${petData.id}`;
 				options.body = { data: Owner };
-				request.post(options, (err, res, body) => {
+				request.post(options, (err, res) => {
 					if (err) return console.log(err);
 					expect(res.statusCode).toBe(200);
 					done();

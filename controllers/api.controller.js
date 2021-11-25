@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const { Pet, AvailablePet, Owner } = require("../models/index.js");
 const { regexFilter } = require("../helpers/index");
 const availablePet = require("../models/availablePet.model.js");
@@ -15,7 +16,7 @@ exports.getPet = async (req, res) => {
 exports.getAll = async (req, res) => {
 	try {
 		let data = await Pet.findAll();
-		res.json(data);
+		res.status(200).send(data);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
