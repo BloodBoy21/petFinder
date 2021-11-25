@@ -1,9 +1,12 @@
 const http = require("http");
 const request = require("request");
-const baseUrl = "http://localhost:3000/api"; 
+const baseUrl = "http://localhost:3000/api";
+const server = require("../index")
 describe("API", () => {
+	afterAll(() => {
+		server.close();
+	})
 	describe("GET /api/pet/all", () => {
-		jest.setTimeout(10000);
 		it("should return a list of pets", (done) => {
 			http
 				.get(`${baseUrl}/pet/all`, (res) => {
@@ -28,7 +31,7 @@ describe("API", () => {
 						const pet = JSON.parse(data);
 						expect(pet.id).toBe(5);
 						done();
-					})	
+					})
 						.on("error", (err) => {
 							console.log("Error: " + err.message);
 							done(err);
@@ -54,6 +57,7 @@ describe("API", () => {
 				if (err) {
 					return console.log(err);
 				}
+
 				expect(res.statusCode).toBe(200);
 				expect(body.data.name).toBe(pet.name);
 				done();
@@ -94,12 +98,18 @@ describe("API", () => {
 				body: { data: pet },
 			};
 			request.post(options, (err, res, body) => {
-				if (err) return console.log(err);
+				if (err){
+					return console.log(err);
+				}
+
 				const petData = body.data;
 				options.url = `${baseUrl}/pet/adopt/${petData.id}`;
 				options.body = { data: Owner };
 				request.post(options, (err, res) => {
-					if (err) return console.log(err);
+					if (err) {
+						return console.log(err);
+					}
+
 					expect(res.statusCode).toBe(200);
 					done();
 				});

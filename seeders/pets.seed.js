@@ -84,6 +84,7 @@ ELLA	PRINCESS	MABEL
 SASHA	LILLY	PEACHES
 IZZY	RILEY	KALI
 SHADOW`.split(/\s+/);
+
 (async () => {
 	for (let i = 0; i < 200; i++) {
 		const gender = Math.floor(Math.random() * 2) === 0 ? "Female" : "Male";
@@ -97,5 +98,6 @@ SHADOW`.split(/\s+/);
 		await new Pet(newPet).save();
 		await new AvailablePet(newPetToAdopt).save();
 	}
+
 	db.close();
 })();

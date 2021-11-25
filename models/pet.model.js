@@ -13,6 +13,7 @@ const Pet = db.define("pet", {
 		defaultValue: false,
 	},
 });
+
 Pet.wasAdopted = async function (id) {
 	this.findByPk(id).then((pet) => {
 		if (pet) {
@@ -20,6 +21,7 @@ Pet.wasAdopted = async function (id) {
 		}
 	});
 };
+
 Pet.getBySpecies = async function (species) {
 	return this.findAll({
 		where: {
@@ -27,7 +29,9 @@ Pet.getBySpecies = async function (species) {
 		},
 	});
 };
+
 (async () => {
 	await Pet.sync();
 })();
+
 module.exports = Pet;

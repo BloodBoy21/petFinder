@@ -14,9 +14,14 @@ availablePet.adopted = async function (id) {
 		}
 	});
 };
+
 availablePet.checkIfExists = async function (id) {
 	const pet = await this.findByPk(id);
-	if (!pet) throw new Error("Pet not found");
+
+	if (!pet) {
+		throw new Error("Pet not found");
+	}
+
 	return pet;
 };
 
