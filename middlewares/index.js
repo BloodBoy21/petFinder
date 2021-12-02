@@ -1,3 +1,3 @@
 module.exports = {
-	APImiddleware: require("../middlewares/API.middleware"),
-};
+  APImiddleware: require('../middlewares/API.middleware')
+}

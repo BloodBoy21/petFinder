@@ -1,56 +1,70 @@
 {
-	"name": "petfinder",
-	"version": "1.0.0",
-	"description": "Exotic pet finder ",
-	"main": "index.js",
-	"nodemonConfig": {
-		"ignore": [
-			"./tests/*.js"
-		]
-	},
-	"scripts": {
-		"test": "jest --detectOpenHandles",
-		"dev": "nodemon index.js",
-		"lint": "eslint ./",
-		"lint:fix": "eslint ./ --fix",
-		"precommit": "lint-staged",
-		"prepare": "husky install"
-	},
-	"author": "Alan B.",
-	"license": "ISC",
-	"dependencies": {
-		"@mapbox/node-pre-gyp": "^1.0.6",
-		"@types/jest": "^27.0.3",
-		"cookie-parser": "^1.4.5",
-		"ejs": "^3.1.6",
-		"express": "^4.17.1",
-		"express-es6-template-engine": "^2.2.3",
-		"husky": "^7.0.4",
-		"lint-staged": "^12.1.2",
-		"morgan": "^1.10.0",
-		"node-fetch": "^3.0.0",
-		"pg": "^8.7.1",
-		"pg-format": "^1.0.4",
-		"pg-hstore": "^2.3.4",
-		"request": "^2.88.2",
-		"sequelize": "^6.11.0",
-		"socket.io": "^4.3.1",
-		"sqlite3": "^5.0.2",
-		"ws": "^8.2.3"
-	},
-	"devDependencies": {
-		"dotenv": "^10.0.0",
-		"eslint": "^7.32.0",
-		"eslint-config-classic": "^1.2.1",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-config-standard": "^16.0.3",
-		"eslint-plugin-import": "^2.25.3",
-		"eslint-plugin-jest": "^25.3.0",
-		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"eslint-plugin-promise": "^5.1.1",
-		"jest": "^27.3.1",
-		"nodemon": "^2.0.14",
-		"prettier": "^2.4.1"
-	}
+  "name": "petfinder",
+  "version": "1.0.0",
+  "description": "Exotic pet finder ",
+  "main": "index.js",
+  "prettier": "prettier-config-standard",
+  "nodemonConfig": {
+    "ignore": [
+      "./tests/*.js",
+      "./tailwind.config.js",
+      "./node_modules/",
+      "./postcss.config.js"
+    ]
+  },
+  "scripts": {
+    "test": "jest --detectOpenHandles --forceExit",
+    "dev": "nodemon index.js ",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix",
+    "precommit": "lint-staged",
+    "prepare": "husky install",
+    "postcss:compile": "postcss ./public/css/tailwind-base.css -o ./public/css/style.css",
+    "watch:css": "watch 'npm run postcss:compile' ./public/css"
+  },
+  "author": "Alan B.",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.6",
+    "@types/jest": "^27.0.3",
+    "autoprefixer": "^10.4.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "css-unit-converter": "^1.1.2",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-es6-template-engine": "^2.2.3",
+    "fast-diff": "^1.2.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.0.0",
+    "pg": "^8.7.1",
+    "pg-format": "^1.0.4",
+    "pg-hstore": "^2.3.4",
+    "postcss-cli": "^9.0.2",
+    "request": "^2.88.2",
+    "sequelize": "^6.11.0",
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "connect-livereload": "^0.6.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-classic": "^1.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jest": "^25.3.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.1.1",
+    "firebase-admin": "^10.0.0",
+    "jest": "^27.3.1",
+    "livereload": "^0.9.3",
+    "nodemon": "^2.0.14",
+    "prettier": "^2.4.1",
+    "prettier-config-standard": "^4.0.0",
+    "watch": "^1.0.2"
+  }
 }

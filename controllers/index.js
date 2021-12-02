@@ -1,3 +1,3 @@
 module.exports = {
-	apiController: require("./api.controller"),
-};
+  apiController: require('./api.controller')
+}

@@ -5,13 +5,14 @@
     "es2021": true,
     "jest": true
   },
-  "extends": ["standard", "prettier"],
-  "plugins": ["promise", "jest", "prettier"],
+  "extends": ["standard"],
+  "plugins": ["promise", "jest"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "rules": {
-    "valid-typeof": "warn"
+    "valid-typeof": "warn",
+    "space-before-function-paren": 1
   }
 }

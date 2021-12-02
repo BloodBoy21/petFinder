@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <title>Pet Finder</title>
+  </head>
+  <body>
+    <main
+      class="
+        bg-white
+        flex-col flex-wrap
+        w-screen
+        h-screen
+        md:w-screen md:h-screen
+      "
+    >
+      <header
+        class="
+          grid grid-cols-10 grid-rows-1
+          w-screen
+          md:w-full
+          h-16
+          bg-header
+          text-white
+        "
+      >
+        <nav class="flex items-center justify-between flex-wrap">
+          <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <img src="images/logo.png" class="w-10 m-2" />
+            <span class="font-semibold text-xl tracking-tight">Pet Finder</span>
+          </div>
+        </nav>
+        <nav
+          class="
+            flex
+            items-center
+            justify-between
+            col-start-9 col-span-10
+            p-4
+            md:col-start-10 md:p-0
+          "
+        >
+          <ul class="flex list-inline gap-3">
+            <li>
+              <a href="https://github.com/BloodBoy21/petFinder">GitHub</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <div
+        class="
+          w-screen
+          h-auto
+          md:w-full
+          items-center
+          flex flex-col
+          align-middle
+          md:h-auto
+          text-black
+        "
+      >
+        <!-- Card carousel -->
+        <section
+          class="
+            w-full
+            h-80
+            items-center
+            justify-center
+            flex
+            md:flex-row md:w-full md:p-5
+            swiper
+            mySwiper
+          "
+        >
+          <section
+            class="swiper-wrapper w-full h-full mb-5"
+            id="swiper-wrapper"
+          ></section>
+          <div class="swiper-button-next hidden md:block"></div>
+          <div class="swiper-button-prev hidden md:block"></div>
+          <div class="swiper-pagination"></div>
+        </section>
+        <!-- Body -->
+        <section
+          class="
+            flex flex-col
+            align-middle
+            items-center
+            w-full
+            h-auto
+            px-3
+            md:w-4/6 md:p-0
+          "
+        >
+          <div class="text-gray-700 font-body w-11/12">
+            <h1
+              class="
+                mt-2
+                text-center
+                font-confortaa font-medium
+                text-2xl
+                md:text-2xl
+              "
+            >
+              Encuentra a tu mascota ideal
+            </h1>
+            <p class="text-center">Una mascota esta esperando tu llegada.</p>
+            <p class="mt-5 text-justify">
+              Pet Finder es una plataforma que te permite encontrar a tu mascota
+              ideal mediante una APIREST.
+            </p>
+            <p class="mt-4 text-center">
+              ¿Quieres encontrar a tu mascota ideal?
+            </p>
+          </div>
+        </section>
+        <!-- Search bar -->
+        <section
+          class="
+            h-10
+            w-11/12
+            items-center
+            justify-center
+            p-2
+            rounded-full
+            shadow-md
+            grid grid-cols-8 grid-rows-1
+          "
+        >
+          <div class="col-start-1 col-end-5 row-span-1">
+            <p>
+              <span class="text-gray-700 font-body"
+                >petfinder.github.io/api/v1/
+              </span>
+            </p>
+          </div>
+          <div class="pl-4 col-start-5 col-span-8 row-span-1">
+            <input
+              id="search-input"
+              class="w-full focus:outline-none"
+              type="text"
+              placeholder="pet/adopt/1"
+            />
+          </div>
+        </section>
+        <!-- search button -->
+        <button id="search-btn" type="button" class="mt-5 btn btn-blue">
+          Vamos!
+        </button>
+        <!-- api data -->
+        <section
+          class="
+            w-11/12
+            h-80
+            border border-gray-400
+            m-5
+            mx-2
+            rounded-lg
+            shadow-md
+            hidden
+          "
+          id="api-data"
+        >
+          <div
+            id="json-container"
+            class="w-full h-full overflow-auto normal-case"
+          ></div>
+        </section>
+      </div>
+
+      <footer></footer>
+    </main>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="js/petSlider.js"></script>
+  </body>
+</html>

@@ -1,6 +1,7 @@
-"use strict";
-const db = require("../db");
-const { Pet, AvailablePet } = require("../models/index");
+'use strict'
+/* eslint-disable */
+const db = require('../db')
+const { Pet, AvailablePet } = require('../models/index')
 const maleNames = `
 MAX	KOBE	OSCAR
 COOPER	OAKLEY	MAC
@@ -42,7 +43,7 @@ ATLAS	CHESTER	GUCCI
 THEO	MAVERICK	MILES
 JACKSON	LINCOLN	WATSON
 HANK	WALLY	PEANUT
-TITAN`.split(/\s+/);
+TITAN`.split(/\s+/)
 const femaleNames = `LUNA	RIVER	DOLLY
 BELLA	LAYLA	CLEO
 DAISY	WINNIE	MAPLE
@@ -86,18 +87,18 @@ IZZY	RILEY	KALI
 SHADOW`.split(/\s+/);
 
 (async () => {
-	for (let i = 0; i < 200; i++) {
-		const gender = Math.floor(Math.random() * 2) === 0 ? "Female" : "Male";
-		let name = { Female: femaleNames, Male: maleNames }[gender];
-		name = name[Math.floor(Math.random() * 100)];
-		const age = Math.floor(Math.random() * 10) + 1;
-		const location = "Minatitlán,ver";
-		const species = ["Dog", "Cat", "Rabbit"][Math.floor(Math.random() * 3)];
-		const newPet = { name, gender, age, species, location };
-		const newPetToAdopt = { id: i + 1, name, species, location };
-		await new Pet(newPet).save();
-		await new AvailablePet(newPetToAdopt).save();
-	}
+  for (let i = 0; i < 200; i++) {
+    const gender = Math.floor(Math.random() * 2) === 0 ? 'Female' : 'Male'
+    let name = { Female: femaleNames, Male: maleNames }[gender]
+    name = name[Math.floor(Math.random() * 100)]
+    const age = Math.floor(Math.random() * 10) + 1
+    const location = 'Minatitlán,ver'
+    const species = ['Dog', 'Cat', 'Rabbit'][Math.floor(Math.random() * 3)]
+    const newPet = { name, gender, age, species, location }
+    const newPetToAdopt = { id: i + 1, name, species, location }
+    await new Pet(newPet).save()
+    await new AvailablePet(newPetToAdopt).save()
+  }
 
-	db.close();
-})();
+  db.close()
+})()
