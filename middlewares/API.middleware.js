@@ -1,16 +1,15 @@
 const { formatChecker } = require('../helpers/index')
 
 exports.jsonChecker = async function (req, res, next) {
-  const urlPath = /\B(\/pet\/adopt\/\d+)\b/.test(req.url) ? '/pet/adopt' : req.url
-
+  const urlPath = /\B(\/adopt\/\d+)\b/.test(req.url) ? 'adopt' : req.url
   try {
+    console.log(urlPath)
     if (!req.body.data) {
       throw new Error('No data found')
     }
-
     const formatMethod = {
-      '/pet': formatChecker.addPet,
-      '/pet/adopt': formatChecker.adoptPet
+      '/pet/add': formatChecker.addPet,
+      adopt: formatChecker.adoptPet
     }[urlPath]
 
     if (!formatMethod) {

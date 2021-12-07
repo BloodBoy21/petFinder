@@ -22,9 +22,9 @@ describe('API', () => {
         })
     })
   })
-  describe('GET /api/pet/:id', () => {
+  describe('GET /api/adopt/:id', () => {
     it('should return a pet', (done) => {
-      http.get(`${baseUrl}/pet/adopt/5`, (res) => {
+      http.get(`${baseUrl}/adopt/5`, (res) => {
         res
           .on('data', (data) => {
             data = data.toString()
@@ -49,7 +49,7 @@ describe('API', () => {
         location: 'New York'
       }
       const options = {
-        url: `${baseUrl}/pet`,
+        url: `${baseUrl}/pet/add`,
         json: true,
         body: { data: pet }
       }
@@ -64,10 +64,10 @@ describe('API', () => {
       })
     })
   })
-  describe('Get /api/pet/adopt?species=', () => {
+  describe('Get /api/adopt/pets?species=', () => {
     it('should return a list of available pets by species', (done) => {
       http
-        .get(`${baseUrl}/pet/adopt?species=Cat`, (res) => {
+        .get(`${baseUrl}/adopt/pets?species=Cat`, (res) => {
           res.on('data', (data) => {
             const pets = JSON.parse(data)
             expect(pets).toBeInstanceOf(Array)
@@ -79,7 +79,7 @@ describe('API', () => {
         })
     })
   })
-  describe('Post /api/pet/adopt/', () => {
+  describe('Post /api/adopt/', () => {
     it('should adopt a pet', (done) => {
       const pet = {
         name: 'Luna',
@@ -93,7 +93,7 @@ describe('API', () => {
         email: 'death1027@outlook.com'
       }
       const options = {
-        url: `${baseUrl}/pet`,
+        url: `${baseUrl}/pet/add`,
         json: true,
         body: { data: pet }
       }
@@ -103,7 +103,7 @@ describe('API', () => {
         }
 
         const petData = body.data
-        options.url = `${baseUrl}/pet/adopt/${petData.id}`
+        options.url = `${baseUrl}/adopt/${petData.id}`
         options.body = { data: Owner }
         request.post(options, (err, res) => {
           if (err) {

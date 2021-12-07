@@ -10,13 +10,13 @@ const { PORT, NODE_ENV } = require('./config/index')
 require('./db')
 
 // Live reload
-// const livereload = require('livereload')
+const livereload = require('livereload')
 
-// const liveReloadServer = livereload.createServer()
-// liveReloadServer.watch(path.join(__dirname, 'views'))
+const liveReloadServer = livereload.createServer()
+liveReloadServer.watch(path.join(__dirname, 'views'))
 
-// const connectLivereload = require('connect-livereload')
-// app.use(connectLivereload())
+const connectLivereload = require('connect-livereload')
+app.use(connectLivereload())
 // Serve middleware
 app.use(morgan('dev'))
 app.use(express.json())

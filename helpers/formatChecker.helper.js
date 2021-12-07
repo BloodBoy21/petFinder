@@ -1,5 +1,5 @@
 const propertiesInJSON = [
-  'photo',
+  'image',
   'name',
   'species',
   'age',
@@ -16,7 +16,7 @@ const typesForEachProperty = {
   gender: 'string',
   owner: 'string',
   email: 'string',
-  photo: 'string'
+  image: 'string'
 }
 
 function jsonHasOwnProperty (json, keys) {
@@ -52,7 +52,6 @@ function jsonCorrectPropertyType (json) {
 function addPet (pet) {
   const allowedProperties = propertiesInJSON.slice(0, 6)
   const requiredProperties = allowedProperties.slice(1, 6)
-
   if (!jsonHasOwnProperty(pet, requiredProperties)) {
     throw new Error('Invalid format')
   }

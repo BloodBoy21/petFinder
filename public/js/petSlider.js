@@ -27,7 +27,7 @@ searcButton.addEventListener('click', () => {
     mainContainer.classList.remove('hidden')
   }
 
-  const data = searchInput.value ? searchInput.value : 'pet/adopt/1'
+  const data = searchInput.value ? searchInput.value : 'adopt/1'
   const url = `${urlBase}/${data}`
   fetch(url)
     .then((response) => response.json())
@@ -38,16 +38,16 @@ searcButton.addEventListener('click', () => {
     })
 })
 
-function displayPets (data) {
+function displayPets(data) {
   data.forEach(async (pet) => {
     await displayPet(pet)
   })
 }
-async function displayPet (data) {
+async function displayPet(data) {
   const petDiv = await jsonStruct(data)
   displayContainer.appendChild(petDiv)
 }
-function jsonStruct (data) {
+function jsonStruct(data) {
   return new Promise((resolve, reject) => {
     try {
       const bracketR = document.createElement('p')
@@ -70,7 +70,7 @@ function jsonStruct (data) {
   })
 }
 /* Pet Carousel */
-function createCard (data) {
+function createCard(data) {
   const elements = createElements()
   elements.aside.appendChild(createCardImage(data.image))
   elements.content.appendChild(createCardContent(data.name))
@@ -79,7 +79,7 @@ function createCard (data) {
   elements.cardContainer.appendChild(elements.card)
   return elements.cardContainer
 }
-function createElements () {
+function createElements() {
   const cardContainer = document.createElement('div')
   cardContainer.classList.add(
     ...'swiper-slide flex items-center justify-center md:w-full'.split(' ')
@@ -92,29 +92,53 @@ function createElements () {
   content.classList.add('card-content')
   return { content, card, aside, cardContainer }
 }
-function createCardImage (image) {
+function createCardImage(image) {
   const img = document.createElement('img')
   img.src = image
   return img
 }
-function createCardContent (value) {
+function createCardContent(value) {
   const p = document.createElement('p')
   p.classList.add(...'capitalize text-xl font-mono'.split(' '))
   p.textContent = `${value}`
   return p
 }
-function createCards () {
-  const randomPet = Math.floor(Math.random() * 100) + 1
-  fetch(`${urlBase}/pet/adopt/${randomPet}`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.name = data.name.toLowerCase()
-      const card = createCard(data)
-      swiper.appendSlide(card)
-    })
+
+async function fetchPet(id) {
+  return new Promise((resolve, reject) => {
+    fetch(`${urlBase}/adopt/${id}`)
+      .then((response) => {
+        if (response.status === 404) {
+          reject(new Error('Pet not found'))
+        }
+        return response.json()
+      })
+      .then((data) => {
+        data.name = data.name.toLowerCase()
+        const card = createCard(data)
+        swiper.appendSlide(card)
+        resolve(data)
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
 }
-window.onload = function () {
-  for (let i = 0; i < 6; i++) {
-    createCards()
+
+async function createRandomCards() {
+  const randomPet = Math.floor(Math.random() * 378) + 1
+  try {
+    await fetchPet(randomPet)
+  } catch (e) {
+    await createRandomCards()
   }
+}
+
+window.onload = async function () {
+  await fetchPet(377)
+  petProcess = []
+  for (let i = 0; i < 4; i++) {
+    petProcess.push(createRandomCards())
+  }
+  await Promise.all(petProcess)
 }

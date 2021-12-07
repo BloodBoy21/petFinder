@@ -1,0 +1,14 @@
+{
+  "folders": [{}],
+  "settings": {
+    "sqltools.connections": [
+      {
+        "previewLimit": 100,
+        "driver": "SQLite",
+        "name": "petFinder",
+        "database": "${workspaceFolder:petFinder}/pet_inventary.db"
+      }
+    ],
+    "sqltools.useNodeRuntime": true
+  }
+}

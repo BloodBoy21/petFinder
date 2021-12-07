@@ -62,10 +62,12 @@
         class="
           w-screen
           h-auto
+          mb-16
           md:w-full
           items-center
           flex flex-col
           align-middle
+          gap-4
           md:h-auto
           text-black
         "
@@ -115,10 +117,12 @@
             >
               Encuentra a tu mascota ideal
             </h1>
-            <p class="text-center">Una mascota esta esperando tu llegada.</p>
-            <p class="mt-5 text-justify">
+            <p class="text-center font-medium text-sm">
+              "Una mascota espera tu llegada."
+            </p>
+            <p class="mt-5 text-justify leading-tight">
               Pet Finder es una plataforma que te permite encontrar a tu mascota
-              ideal mediante una APIREST.
+              ideal mediante una APIrest.
             </p>
             <p class="mt-4 text-center">
               ¿Quieres encontrar a tu mascota ideal?
@@ -128,24 +132,25 @@
         <!-- Search bar -->
         <section
           class="
+            mt-4
             h-10
             w-11/12
-            items-center
             justify-center
-            p-2
+            items-center
             rounded-full
             shadow-md
-            grid grid-cols-8 grid-rows-1
+            overflow-hidden
+            flex
           "
         >
-          <div class="col-start-1 col-end-5 row-span-1">
+          <div class="pl-4 flex items-center h-full">
             <p>
               <span class="text-gray-700 font-body"
                 >petfinder.github.io/api/v1/
               </span>
             </p>
           </div>
-          <div class="pl-4 col-start-5 col-span-8 row-span-1">
+          <div class="flex items-center h-full w-full">
             <input
               id="search-input"
               class="w-full focus:outline-none"
@@ -177,9 +182,47 @@
             class="w-full h-full overflow-auto normal-case"
           ></div>
         </section>
+        <!-- Empezar a usar -->
+        <section class="flex flex-col px-4 mt-5">
+          <h2 class="text-2xl mb-3">Como usar?</h2>
+          <p>
+            Para empezar a usar Pet Finder, ingresa la URL de la API que quieras
+            usar.
+          </p>
+          <p class="text-gray-700 font-body">petfinder.github.io/api/v1/</p>
+          <p>Endpoints:</p>
+          <ul class="list-outside list-disc">
+            <li>
+              <p class="text-gray-700 font-body">
+                pet/adopt/<span class="text-blue-500">:id</span>
+              </p>
+            </li>
+            <li>
+              <p class="text-gray-700 font-body">
+                pet/adopt/<span class="text-blue-500">pets</span>
+              </p>
+            </li>
+            <li>
+              <p class="text-gray-700 font-body">
+                pet/<span class="text-blue-500">add</span>
+              </p>
+            </li>
+            <li>
+              <p class="text-gray-700 font-body">
+                pet/<span class="text-blue-500">all</span>
+              </p>
+            </li>
+            <li>
+              <p class="text-gray-700 font-body">
+                pet/<span class="text-blue-500">:species</span>
+              </p>
+            </li>
+          </ul>
+        </section>
       </div>
-
-      <footer></footer>
+      <footer class="w-screen h-12 bg-black text-white">
+        <p>ola</p>
+      </footer>
     </main>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="js/petSlider.js"></script>

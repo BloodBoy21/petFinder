@@ -13,6 +13,6 @@
   },
   "rules": {
     "valid-typeof": "warn",
-    "space-before-function-paren": 1
+    "space-before-function-paren": 0
   }
 }
