@@ -12,7 +12,7 @@ const Pet = db.define('pet', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
-  image: DataTypes.STRING
+  image: DataTypes.TEXT
 })
 
 Pet.wasAdopted = async function (id) {

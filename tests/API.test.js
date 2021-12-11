@@ -79,7 +79,7 @@ describe('API', () => {
         })
     })
   })
-  describe('Post /api/adopt/', () => {
+  describe('Post /api/adopt/:id', () => {
     it('should adopt a pet', (done) => {
       const pet = {
         name: 'Luna',

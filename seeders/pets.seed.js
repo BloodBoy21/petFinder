@@ -84,15 +84,15 @@ ANNIE	XENA	CORA
 ELLA	PRINCESS	MABEL
 SASHA	LILLY	PEACHES
 IZZY	RILEY	KALI
-SHADOW`.split(/\s+/);
+SHADOW`.split(/\s+/)
 
-(async () => {
+;(async () => {
   for (let i = 0; i < 200; i++) {
     const gender = Math.floor(Math.random() * 2) === 0 ? 'Female' : 'Male'
     let name = { Female: femaleNames, Male: maleNames }[gender]
     name = name[Math.floor(Math.random() * 100)]
     const age = Math.floor(Math.random() * 10) + 1
-    const location = 'Minatitlán,ver'
+    const location = 'Minatitlán'
     const species = ['Dog', 'Cat', 'Rabbit'][Math.floor(Math.random() * 3)]
     const newPet = { name, gender, age, species, location }
     const newPetToAdopt = { id: i + 1, name, species, location }

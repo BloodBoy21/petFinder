@@ -26,7 +26,6 @@ searcButton.addEventListener('click', () => {
   if (mainContainer.classList.contains('hidden')) {
     mainContainer.classList.remove('hidden')
   }
-
   const data = searchInput.value ? searchInput.value : 'adopt/1'
   const url = `${urlBase}/${data}`
   fetch(url)
@@ -126,7 +125,7 @@ async function fetchPet(id) {
 }
 
 async function createRandomCards() {
-  const randomPet = Math.floor(Math.random() * 378) + 1
+  const randomPet = Math.floor(Math.random() * 205) + 1
   try {
     await fetchPet(randomPet)
   } catch (e) {
@@ -135,7 +134,7 @@ async function createRandomCards() {
 }
 
 window.onload = async function () {
-  await fetchPet(377)
+  await fetchPet(206)
   petProcess = []
   for (let i = 0; i < 4; i++) {
     petProcess.push(createRandomCards())

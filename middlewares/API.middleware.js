@@ -3,7 +3,6 @@ const { formatChecker } = require('../helpers/index')
 exports.jsonChecker = async function (req, res, next) {
   const urlPath = /\B(\/adopt\/\d+)\b/.test(req.url) ? 'adopt' : req.url
   try {
-    console.log(urlPath)
     if (!req.body.data) {
       throw new Error('No data found')
     }

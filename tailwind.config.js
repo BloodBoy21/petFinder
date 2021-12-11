@@ -1,5 +1,6 @@
 module.exports = {
-  darkMode: false, // or 'media' or 'class'
+  content: ['./views/**/*.html'],
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
     extend: {},
     backgroundColor: (theme) => ({
